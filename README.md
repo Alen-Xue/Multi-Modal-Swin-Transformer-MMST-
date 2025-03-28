@@ -1,7 +1,8 @@
-Project Overview
+#Project Overview
+
 This project implements a multi-modal classification model that combines image data (processed by Swin Transformer) and structured data (processed by a custom embedding and attention-based fusion module). The model is designed for tasks where both visual and tabular data are available, such as disaster impact assessment, where images of affected areas and structured data (e.g., evacuation zones, building age, etc.) are used to predict outcomes.
 
-Key features:
+#Key features:
 
 Multi-Modal Fusion: Combines image features (from Swin Transformer) and structured data features (from FModel) using a weighted fusion strategy.
 Focal Loss: Addresses class imbalance by focusing on hard-to-classify samples.
@@ -11,12 +12,14 @@ FocalLoss
 Overview
 FocalLoss is a custom loss function that extends the cross-entropy loss to address class imbalance by down-weighting easy-to-classify samples and focusing on hard-to-classify ones.
 
-Parameters
+#Parameters:
+
 alpha (float, default: 1): Weighting factor to balance positive and negative samples.
 gamma (float, default: 2): Focusing parameter to emphasize hard samples. Higher values increase focus on difficult samples.
 logits (bool, default: False): Whether the input is raw logits. If True, applies F.cross_entropy directly; if False, applies softmax first.
 reduce (bool, default: True): Whether to reduce the loss. If True, returns the mean loss; if False, returns per-sample losses.
-Inputs and Outputs
+
+#Inputs and Outputs
 Inputs:
 inputs (Tensor): Model predictions, shape (batch_size, num_classes).
 targets (Tensor): Ground truth labels, shape (batch_size,).
