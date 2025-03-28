@@ -295,29 +295,37 @@ loss = criterion(output, labels)
 loss.backward()
 optimizer.step()
 print(f"Loss: {loss.item()}")
-Input Data Requirements
-Image Data
+
+# Input Data Requirements
+
+## Image Data
+
 Shape: (batch_size, 3, 224, 224) (RGB images, 224x224 resolution).
-Preprocessing:
+
+## Preprocessing:
+
 Resize images to 224x224.
+
 Normalize pixel values (e.g., using ImageNet mean and standard deviation).
-Structured Data
-Feature Ranges:
+
+## Structured Data
+
+### Feature Ranges:
+
 Evacuation_Zone: Integer in [0, 5].
+
 YearBuilt: Integer in [0, 112].
+
 EstimatedValue_level: Integer in [0, 37].
+
 dist_track_line: Integer in [0, 114].
+
 dist_track_landfall: Integer in [0, 123].
+
 wind_mean: Integer in [0, 119].
+
 flood_mean: Integer in [0, 13].
+
 Shape: Each feature should be a tensor of shape (batch_size,).
-Notes and Considerations
-Pretrained Weights:
-Ensure the pretrain_path and pretrained_path point to valid files.
-The Swin Transformer weights must match the swin_s architecture.
-Class Imbalance:
-Adjust alpha and gamma in FocalLoss to handle class imbalance.
-Computational Resources:
-The Swin Transformer and multi-head attention require significant GPU memory. Use a GPU for training and inference.
-Feature Selection:
+
 The chioce_matrix allows selective inclusion of features. Modify it based on your use case.
