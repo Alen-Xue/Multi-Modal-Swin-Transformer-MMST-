@@ -11,17 +11,16 @@ class ScaledDotProductAttention(nn.Module):
         self.softmax = nn.Softmax(dim=-1)
 
     def forward(self, q, k, v, scale=None, attn_mask=None):
-        """前向传播.
+        """
         Args:
-            q: Queries张量，形状为[B, L_q, D_q]
-            k: Keys张量，形状为[B, L_k, D_k]
-            v: Values张量，形状为[B, L_v, D_v]，一般来说就是k
-            scale: 缩放因子，一个浮点标量
-            attn_mask: Masking张量，形状为[B, L_q, L_k]
+            q: Queries tensor, shape [B, L_q, D_q]
+            k: Keys tensor, shape [B, L_k, D_k]
+            v: Values ​​tensor, shape [B, L_v, D_v], generally k
+            scale: scaling factor, a floating point scalar
+            attn_mask: Masking tensor, shape [B, L_q, L_k]
         Returns:
-            上下文张量和attetention张量
-        """
-        """
+            Context tensor and attention tensor
+
         torch.bmm(input, mat2, out=None) → Tensor
         Performs a batch matrix-matrix product of matrices stored in input and mat2.
         input and mat2 must be 3-D tensors each containing the same number of matrices.
@@ -36,12 +35,12 @@ class ScaledDotProductAttention(nn.Module):
         if scale:
             attention = attention * scale
         if attn_mask is not None:
-            # 给需要mask的地方设置一个负无穷
+          
             attention = attention.masked_fill_(attn_mask, -np.inf)
-        # 计算softmax
+        # softmax
         attention = self.softmax(attention)   # attention(..., seq_len_q, seq_len_k)
 
-        # 和V做点积
+        # Do the dot product with V
         context = torch.matmul(attention, v)  # context(..., seq_len_q, depth_v)
         return context, attention
 class MultiHeadAttention(nn.Module):
@@ -59,7 +58,6 @@ class MultiHeadAttention(nn.Module):
         self.dot_product_attention = ScaledDotProductAttention(dropout)
         self.linear_final = nn.Linear(model_dim, model_dim)
         self.dropout = nn.Dropout(dropout)
-        # multi-head attention之后需要做layer norm
         self.layer_norm = nn.LayerNorm(model_dim)
 
     def split_heads(self, x, batch_size):
@@ -73,19 +71,11 @@ class MultiHeadAttention(nn.Module):
     def forward(self, key, value, query, attn_mask=None):
         """
         Args:
-            key: Keys张量，形状为[B, L_k, D_k]
-            value: Values张量，形状为[B, L_v, D_v]，一般来说就是k
-            query: Queries张量，形状为[B, L_q, D_q]
-            attn_mask: 形状为[B, L_q, L_k]
+            key: Keys tensor, shape is [B, L_k, D_k]
+            value: Values: tensor, shape is [B, L_v, D_v], generally k
+            query: Queries tensor, shape is [B, L_q, D_q]
+            attn_mask: shape is [B, L_q, L_k]
         """
-        # 残差连接
-        # if len(key.shape)==2:
-        #     key=torch.unsqueeze(key,1)
-        #     value=torch.unsqueeze(value, 1)
-        #     query = torch.unsqueeze(query, 1)
-        # key=torch.unsqueeze(key,1)
-        # value = torch.unsqueeze(value, 1)
-        # query = torch.unsqueeze(query, 1)
         residual = query
 
         dim_per_head = self.dim_per_head
@@ -128,21 +118,4 @@ class MultiHeadAttention(nn.Module):
         output = self.layer_norm(residual + output)
         output=torch.squeeze(output,1)
         return output, attention
-class MyModel(nn.Module):
-    def __init__(self, model_dim=2048, num_heads=1,LSTM_layers=1,hidden_size=100,dropout=0.0):
-        super(MyModel, self).__init__()
-        self.att1=MultiHeadAttention(model_dim=model_dim,num_heads=num_heads)
-        self.LSTM1 = nn.LSTM(model_dim, hidden_size, LSTM_layers)
-        self.flatten1=nn.Flatten()
-        self.fc1=nn.Linear(29*hidden_size,512)
-        self.fc2=nn.Linear(512,32)
-        self.fc3=nn.Linear(32,1)
-    def forward(self,x):
-        x,_ = self.att1(x,x,x,x)
-        x,_ = self.LSTM1(x)
-        x = self.flatten1(x)
-        x = self.fc1(x)
-        x = self.fc2(x)
-        x = self.fc3(x)
-        return x
 
