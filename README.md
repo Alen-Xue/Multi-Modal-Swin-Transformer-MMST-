@@ -243,14 +243,23 @@ model = MixModel(
 )
 
 # Construct input data
-batch_size = 4
+
+batch_size = 32
+
 img = torch.randn(batch_size, 3, 224, 224)  # Image data
+
 Evacuation_Zone = torch.randint(0, 6, (batch_size,))  # Evacuation zone
+
 YearBuilt = torch.randint(0, 113, (batch_size,))  # Year of construction
+
 EstimatedValue_level = torch.randint(0, 38, (batch_size,))  # Estimated value level
+
 dist_track_line = torch.randint(0, 115, (batch_size,))  # Distance to track line
+
 dist_track_landfall = torch.randint(0, 124, (batch_size,))  # Distance to landfall
+
 wind_mean = torch.randint(0, 120, (batch_size,))  # Mean wind speed
+
 flood_mean = torch.randint(0, 14, (batch_size,))  # Mean flood intensity
 
 # Forward pass
@@ -272,15 +281,20 @@ import torch.optim as optim
 from model import FocalLoss  # Replace with the actual file name
 
 # Define loss function and optimizer
+
 criterion = FocalLoss(alpha=1, gamma=2, logits=True)
-optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+optimizer = optim.Adam(model.parameters(), lr=0.0001)
 
 # Construct labels
 labels = torch.randint(0, 3, (batch_size,))
 
 # Training step
+
 model.train()
+
 optimizer.zero_grad()
+
 output = model(
     img,
     Evacuation_Zone,
@@ -291,9 +305,13 @@ output = model(
     wind_mean,
     flood_mean
 )
+
 loss = criterion(output, labels)
+
 loss.backward()
+
 optimizer.step()
+
 print(f"Loss: {loss.item()}")
 
 # Input Data Requirements
