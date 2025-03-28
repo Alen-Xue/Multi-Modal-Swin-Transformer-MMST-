@@ -12,13 +12,13 @@ Attention Mechanism: Uses multi-head attention to capture interactions between s
 
 # Model Components:
 
-FocalLoss
+## FocalLoss
 
-Overview
+## Overview
 
 FocalLoss is a custom loss function that extends the cross-entropy loss to address class imbalance by down-weighting easy-to-classify samples and focusing on hard-to-classify ones.
 
-# Parameters:
+## Parameters:
 
 alpha (float, default: 1): Weighting factor to balance positive and negative samples.
 
@@ -28,14 +28,14 @@ logits (bool, default: False): Whether the input is raw logits. If True, applies
 
 reduce (bool, default: True): Whether to reduce the loss. If True, returns the mean loss; if False, returns per-sample losses.
 
-# Inputs and Outputs
-## Inputs:
+## Inputs and Outputs
+### Inputs:
 
 inputs (Tensor): Model predictions, shape (batch_size, num_classes).
 
 targets (Tensor): Ground truth labels, shape (batch_size,).
 
-## Outputs:
+### Outputs:
 
 If reduce=True: Scalar (mean Focal Loss).
 
