@@ -49,7 +49,7 @@ class MixModel(nn.Module) means that we use the swin_s model and the FModel to t
 '''
 class MixModel(nn.Module):
 
-    def __init__(self,embedding_size=[6,113,38,115,124,120,14],chioce_matrix=[1,1,1,1,0,1,0],pretrained_path=None,num_classes=3,ratio=0.8,pretrain_path="./swin_s-5e29d889.pth",chioce="None",num_heads=5):
+    def __init__(self,embedding_size=[6,113,38,115,124,120,14],chioce_matrix=[1,1,1,1,0,1,0],FModel_path=None,num_classes=3,ratio=0.8,Swin-S_path="./swin_s-5e29d889.pth",chioce="None",num_heads=5):
         super(MixModel, self).__init__()
         self.swim=swin_s()
         if chioce_matrix==None:
@@ -59,10 +59,10 @@ class MixModel(nn.Module):
             for i in range(len(chioce_matrix)):
                 if chioce_matrix[i]!=0:
                     self.chioce_matrix.append(i)
-        self.swim.load_state_dict(torch.load(pretrain_path))
+        self.swim.load_state_dict(torch.load(Swin-S_path))
         self.embedding=FModel(embedding_size=embedding_size,chioce_matrix=self.chioce_matrix)
-        if pretrained_path!=None:
-            self.embedding.load_state_dict(torch.load(pretrained_path))
+        if FModel_path!=None:
+            self.embedding.load_state_dict(torch.load(FModel_path))
         self.dropout = nn.Dropout(p=0.25, inplace=False)
         self.choice=chioce
         self.ratio=ratio
